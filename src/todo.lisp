@@ -6,16 +6,20 @@
 (defun write-todo () "Writes todo to a file."
 
   (format t ": ~&")
-  (defvar user-input)
+  ;; (defvar user-input)
 
-  (setf user-input (make-array '(0) :element-type 'base-char :adjustable t))
-  (setf user-input (read-line))
+  ;; (setf user-input (make-array '(0) :element-type 'base-char :adjustable t))
+  ;; (setf user-input (read-line))
 
-  (with-open-file (stream "./file.txt" :direction :output :if-exists :append :if-does-not-exist :create)
+  (let ((user-input (read)))
+    (with-open-file (stream "./file.txt" :direction :output :if-exists :append :if-does-not-exist :create)
 
-    (format stream "~a~%" user-input)
+      (format stream "~a~%" (string-downcase user-input))
+
+      )
 
     )
+
 
 )
 
@@ -25,6 +29,8 @@
 
   (with-open-file (stream "./file.txt")
 
+    (let((index 0))
+
       (loop for line = (read stream nil)
 
             while line do
@@ -32,6 +38,8 @@
               (format t "Todo ~a -> ~a~%" index line)
 
             ) ;; nil so it doesn't error out when EOF
+      )
+
 
     )
 
@@ -39,19 +47,21 @@
 
 (defun see-todo () "Checks if todo is already added."
 
-  (defvar test-todo "")
+  ;; (defvar test-todo "")
 
   (with-open-file (stream "./file.txt" :if-does-not-exist nil)
 
     (format t ": ~&")
-    (setf test-todo (read))
+    (let ((test-todo (read-line)))
 
-    (loop for line = (read stream nil)
+        (loop for line = (read stream nil)
 
-          while line do
-            (if (string-equal line test-todo) (format t "Already added. ~&"))
+              while line do
+                (if (string-equal line test-todo) (format t "Already added. ~&"))
 
-          )
+              )
+      )
+
 
     )
 
